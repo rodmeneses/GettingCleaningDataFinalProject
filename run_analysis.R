@@ -36,10 +36,11 @@ feats <- read.table(paste0(directory, "/features.txt"))
 feats[,2] <- as.character(feats[,2])
 
 # now using regex, just get the mean and std feats
-meanStdFeats <- grep(".*mean.*|.*std.*", feats[,2])
+meanStdFeats <- grep(".*std.*|.*mean.*", feats[,2])
+#tidy data: all lowercase
 meanStdFeats.names <- tolower(feats[meanStdFeats,2])
-meanStdFeats.names <- gsub('-mean', 'Mean', meanStdFeats.names)
-meanStdFeats.names <- gsub('-std', 'Std', meanStdFeats.names)
+meanStdFeats.names <- gsub('-mean', 'mean', meanStdFeats.names)
+meanStdFeats.names <- gsub('-std', 'std', meanStdFeats.names)
 meanStdFeats.names <- gsub('[-()]', '', meanStdFeats.names)
 
 ##helper function to read the dataset bye type
@@ -50,11 +51,8 @@ readDatasetByType <- function  (type) {
   subjectData <- read.table(paste0(directory, "/", type, "/subject_", type, ".txt"));
   xData <- read.table(paste0(directory, "/", type, "/x_", type, ".txt"))[meanStdFeats]
   yData       <- read.table(paste0(directory, "/", type, "/y_", type, ".txt")); 
-  #return subjet, x and y data
+  #bind them all into a single table
   cbind(subjectData, yData, xData)
-  
-  #print(class(xData))
-  #list(subjectData, xData, yData)
 }
 
 #Load the train set
@@ -63,36 +61,12 @@ testDataSets = readDatasetByType("test")
 
 completeData <- rbind(trainDataSets, testDataSets)
 colnames(completeData) <- c("subject", "activity", meanStdFeats.names)
-
-
+#factor out to use labels instead of numbers
 completeData$activity <- factor(completeData$activity, levels = actLbls[,1], labels = actLbls[,2])
 completeData$subject <- as.factor(completeData$subject)
+#needed for useful functions
 library(reshape2)
 completeData.melted <- melt(completeData, id = c("subject", "activity"))
 completeData.mean <- dcast(completeData.melted, subject + activity ~ variable, mean)
-
+#finally writes the tidy file
 write.table(completeData.mean, "tidy.txt", row.names = FALSE, quote = FALSE)
-
-
-##create the corrsponding vars
-#subjectDataTrain = trainDataSets[[1]]
-#XDataTrain = trainDataSets[[2]][meanStdFeats]
-# YDataTrain = trainDataSets[[3]]
-# 
-# subjectDataTest = testDataSets[[1]]
-# XDataTest = testDataSets[[2]][meanStdFeats]
-# YDataTest = testDataSets[[3]]
-# 
-# #merge them
-# XDataMerged <- rbind(XDataTrain, XDataTest)
-# colnames(XDataMerged) <- c("subject", "activity", meanStdFeats)
-# YDataMerged <- rbind(YDataTrain, YDataTest)[, 1]
-# #label them
-# #activty name labels
-# activityNames <- c("Walking", "Walking Upstairs", "Walking Downstairs", "Sitting", "Standing", "Laying")
-# activities <- activityNames[YDataMerged]
-# 
-# #assign the colnames
-# #colnames(activityType)  = c('activityId','activityType');
-# 
-
