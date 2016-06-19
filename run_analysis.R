@@ -1,7 +1,3 @@
-#Initializes 
-MyXTrainData <- NULL
-MyXTestData <- NULL
-
 #attempt to download the zip file from the internet, only if the corresponding directory is not already available
 #in the working directory
 #returns the name of the directory with the data.
@@ -66,6 +62,7 @@ completeData$activity <- factor(completeData$activity, levels = actLbls[,1], lab
 completeData$subject <- as.factor(completeData$subject)
 #needed for useful functions
 library(reshape2)
+##calculate mean
 completeData.melted <- melt(completeData, id = c("subject", "activity"))
 completeData.mean <- dcast(completeData.melted, subject + activity ~ variable, mean)
 #finally writes the tidy file

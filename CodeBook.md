@@ -1,12 +1,14 @@
-Description
+# Getting and Cleaning Data - Course Project - CODE BOOK
 
-information about the variables and transformations about the course project for Getting and Cleaning Data course.
+## Description
 
-Source Data
+Information about the variables and transformations about the course project for Getting and Cleaning Data course.
+
+## Source Data
 
 A full description of the data used in this project can be found at The UCI Machine Learning Repository
 
-Data Set Information
+## Data Set Information
 
 Taken from http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones:
 
@@ -16,7 +18,7 @@ The sensor signals (accelerometer and gyroscope) were pre-processed by applying 
 
 For a detail information about the transformation logic please see  [README.md](./README.md)
 
-
+## Transformation Logic
 The transformation of the data consisted in Extracting only the measurements on the mean and standard deviation for each measurement. We used descriptive activity names to name the activities in the data set
 and also we appropriately labeled the data set with descriptive variable names.  Fnally, independent tidy data set with the average of each variable for each activity and each subject was created.
 
